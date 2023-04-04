@@ -1,0 +1,37 @@
+service: aws-node-project
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  iam: 
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - 'dynamodb:*'
+          Resource: '*'
+
+resources:
+  Resources:
+    bbdevs:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: leaf3bbilguunawstutorial
+    SampleBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: !Ref bbdevs
+        PolicyDocument:
+          Statement:
+            - Action:
+                - "s3:GetObject"
+                - "s3:PutObject"
+              Effect: Allow
+              Resources:
+                - arn:aws:s3:::leaf3bbilguunawstutorial/*
+              Principal: '*'
+
+functions:
+  function1:
+    handler: index.handler
