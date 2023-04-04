@@ -17,7 +17,7 @@ resources:
     bbdevs:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: leaf3bbilguunawstutorial
+        BucketName: leafbbilguunawstutorial
     SampleBucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:
@@ -29,9 +29,28 @@ resources:
                 - "s3:PutObject"
               Effect: Allow
               Resources:
-                - arn:aws:s3:::leaf3bbilguunawstutorial/*
+                - arn:aws:s3:::leafbbilguunawstutorial/*
               Principal: '*'
 
 functions:
-  function1:
+  firstFunction:
     handler: index.handler
+    events: 
+      - http:
+          path: /
+          method: put
+          cors: true
+  # secondFunction:
+  #   handler: index.recordsCheck
+  #   events:
+  #     - http:
+  #         path: /
+  #         method: post
+  #         cors: true
+  #     - s3:
+  #         bucket: leaf3bilguunawstutorial
+  #         events:
+  #           - s3:ObjectCreated:*
+  #         # rules:
+  #           # - prefix: images/
+  #         existing: true

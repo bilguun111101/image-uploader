@@ -1,10 +1,11 @@
 const AWS = require('aws-sdk');
 
 const s3 = new AWS.S3();
-const uploadBucket = 'leaf3bbilguunawstutorial';
-const URL_EXPIRATION_SECONDS = 400000;
+const uploadBucket = 'leafbbilguunawstutorial';
+const URL_EXPIRATION_SECONDS = 3000000;
 
-exports.handler = async (event) => {
+exports.handler = async(event) => {
+  console.log(event);
   const params = {
     Bucket: uploadBucket,
     Key: "img.png",
@@ -12,14 +13,20 @@ exports.handler = async (event) => {
     ContentType: 'image/png'
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise((reslove, reject) => {
     const uploadUrl = s3.getSignedUrl('putObject', params);
     const response = {
       statusCode: 200,
-      body: JSON.stringify({
-        uploadUrl,
-      }),
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+      },
+      body: JSON.stringify({ uploadUrl })
     }
-    resolve(response);
+    reslove(response);
   })
-};
+}
+
+// exports.recordsCheck = async(event) => {
+//   console.log(event);
+// }
