@@ -2,11 +2,13 @@ import React from 'react';
 
 interface ButtonProps {
   text: string;
+  type: string;
   handle: (ev: any) => void;
 }
 
 export const Button = ({
   text,
+  type,
   handle,
 }: ButtonProps) => {
   return (
@@ -21,8 +23,18 @@ export const Button = ({
       active:bg-blue-700
       relative
     '>
-      <input type="file" className='hidden' onChange={(event) => handle(event)}/>
-      { text }
+      { type === 'file' ? (
+        <>
+          <input type={type} className='hidden' onChange={(event) => handle(event)} />
+          { text }
+        </>
+      ) : (
+        <>
+          <input type={type} className='hidden' onClick={handle} />
+          { text }
+        </>
+      )
+      }
     </label>
   )
 }
