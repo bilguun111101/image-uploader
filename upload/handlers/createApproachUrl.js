@@ -2,13 +2,18 @@ const AWS = require('aws-sdk');
 
 const s3 = new AWS.S3();
 const uploadBucket = 'leafbbilguunawstutorial';
-const URL_EXPIRATION_SECONDS = 3000000;
+const URL_EXPIRATION_SECONDS = 3000;
 
 exports.handler = async(event) => {
-  console.log(event);
+  const {
+    Key,
+    Type,
+    formData
+  } = JSON.parse(event.body);
+  console.log(event.body);
   const params = {
     Bucket: uploadBucket,
-    Key: "img.png",
+    Key,
     Expires: URL_EXPIRATION_SECONDS,
     ContentType: 'image/png'
   }
@@ -18,15 +23,12 @@ exports.handler = async(event) => {
     const response = {
       statusCode: 200,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true,
+        "Access-Control-Allow-Headers" : "Content-Type",
+        "Access-Control-Allow-Origin": "http://localhost:3000",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
       },
       body: JSON.stringify({ uploadUrl })
     }
     reslove(response);
   })
 }
-
-// exports.recordsCheck = async(event) => {
-//   console.log(event);
-// }

@@ -1,10 +1,31 @@
 import { Button } from "@/components";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 
 const Home = () => {
     const [selectFile, setSelectFile] = useState<File | undefined>(undefined);
     const [windowImage, setWindowImage] = useState("")
+
+    const sendFile = useCallback(async() => {
+        if(!selectFile) return;
+            const Key = Math.random() * 10000;
+            const formData = new FormData()
+            formData.append('selectedFile', selectFile);
+            try {
+                const response = await axios({
+                    method: 'post',
+                    url: 'https://jwyaocojv2.execute-api.us-east-1.amazonaws.com/dev/url',
+                    data: {
+                        formData,
+                        Key,
+                        Type: ""
+                    },
+                    headers: { "Content-Type": "*" }
+                })
+                console.log(response);
+            } catch (error) { console.log(error) }
+    }, [selectFile])
+
     const handleImage = (event: any) => {
         event.preventDefault();
         const { target } = event;
@@ -13,21 +34,6 @@ const Home = () => {
         setWindowImage(URL.createObjectURL(file));
         setSelectFile(file);
     }
-    useEffect(() => {
-        (async() => {
-            if(!selectFile) return;
-            const formData = new FormData()
-            formData.append('selectedFile', selectFile);
-            try {
-                const response = await axios({
-                    method: 'put',
-                    url: '',
-                    data: formData,
-                    headers: { "Content-Type": "*" }
-                })
-            } catch (error) { console.log(error) }
-        })()
-    }, [selectFile])
     return (
         <section className="w-full h-screen p-3">
             <div className="w-full h-full flex relative items-center justify-center">
@@ -35,7 +41,10 @@ const Home = () => {
                     <div className="w-full bg-cover bg-no-repeat h-96 border flex justify-center items-center">
                         { windowImage && <img src={windowImage} alt="image" className="w-full h-full" /> }
                     </div>
-                    <Button text="upload" handle={handleImage} />
+                    <div className="flex gap-4">
+                        <Button text="upload" handle={handleImage} type="file" />
+                        <Button text="send" handle={sendFile} type="submit" />
+                    </div>
                 </div>
             </div>
         </section>
