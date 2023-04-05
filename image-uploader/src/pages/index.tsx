@@ -41,10 +41,15 @@ const Home = () => {
         if(!approachUrl || !selectFile) return;
         (async() => {
             const formData = new FormData();
-            formData.append('selectedFile', selectFile);
+            formData.append('image', selectFile);
+            console.log(approachUrl)
             try {
-                const response = await axios.put(approachUrl, formData, { headers: { ContentType: selectFile.type }});
-                if(!response.data) return;
+                // const response = await axios.put(approachUrl, formData, { headers: { ContentType: selectFile.type }});
+                const response = await axios.put(approachUrl, formData.get('image'), {
+                    headers: {
+                        'Content-Type': selectFile.type
+                    }
+                })
                 setSelectFile(undefined);
                 setApproachUrl(undefined);
                 setApproach(true);
