@@ -8,19 +8,20 @@ const URL_EXPIRATION_SECONDS = 3000;
 exports.handler = async(event) => {
   const {
     Key,
-    Type,
+    Type: ContentType,
   } = JSON.parse(event.body);
 
   const params = {
     Bucket: uploadBucket,
     Key,
     Expires: URL_EXPIRATION_SECONDS,
-    ContentType: Type
+    ContentType
   }
 
 
   return new Promise((reslove, reject) => {
     const uploadUrl = s3.getSignedUrl('putObject', params);
+    console.log(uploadUrl);
     const response = {
       statusCode: 200,
       headers: {
