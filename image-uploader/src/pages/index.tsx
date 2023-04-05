@@ -4,25 +4,26 @@ import axios from "axios";
 
 const Home = () => {
     const [selectFile, setSelectFile] = useState<File | undefined>(undefined);
+    const [approachUrl, setApproachUrl] = useState<string | undefined>(undefined);
     const [windowImage, setWindowImage] = useState("")
 
     const sendFile = useCallback(async() => {
         if(!selectFile) return;
-            const Key = Math.random() * 10000;
-            const formData = new FormData()
-            formData.append('selectedFile', selectFile);
+            const Key = selectFile?.name;
+            const Type = Key?.split('.').at(-1);
             try {
                 const response = await axios({
-                    method: 'post',
+                    method: 'POST',
                     url: 'https://jwyaocojv2.execute-api.us-east-1.amazonaws.com/dev/url',
                     data: {
-                        formData,
                         Key,
-                        Type: ""
+                        Type
                     },
-                    headers: { "Content-Type": "*" }
+                    headers: {
+                        "Content-Type": "*",
+                    }
                 })
-                console.log(response);
+                setApproachUrl(response?.data.uploadUrl);
             } catch (error) { console.log(error) }
     }, [selectFile])
 
@@ -34,6 +35,24 @@ const Home = () => {
         setWindowImage(URL.createObjectURL(file));
         setSelectFile(file);
     }
+    useEffect(() => {
+        if(!approachUrl || !selectFile) return;
+        (async() => {
+            const formData = new FormData();
+            formData.append('selectedFile', selectFile);
+            try {
+                const response = await axios({
+                    method: 'PUT',
+                    url: approachUrl,
+                    data: formData,
+                    headers: { "Content-Type": "*" }
+                })
+                if(!response) return;
+                setSelectFile(undefined);
+                setApproachUrl(undefined);
+            } catch (error) { console.log(error) }
+        })()
+    }, [approachUrl])
     return (
         <section className="w-full h-screen p-3">
             <div className="w-full h-full flex relative items-center justify-center">

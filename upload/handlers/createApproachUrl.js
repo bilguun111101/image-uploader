@@ -7,15 +7,13 @@ const URL_EXPIRATION_SECONDS = 3000;
 exports.handler = async(event) => {
   const {
     Key,
-    Type,
-    formData
+    Type
   } = JSON.parse(event.body);
-  console.log(event.body);
   const params = {
     Bucket: uploadBucket,
     Key,
     Expires: URL_EXPIRATION_SECONDS,
-    ContentType: 'image/png'
+    ContentType: `image/${Type}`
   }
 
   return new Promise((reslove, reject) => {
@@ -23,9 +21,8 @@ exports.handler = async(event) => {
     const response = {
       statusCode: 200,
       headers: {
-        "Access-Control-Allow-Headers" : "Content-Type",
-        "Access-Control-Allow-Origin": "http://localhost:3000",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+        "Access-Control-Allow-Headers" : "*",
+        "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify({ uploadUrl })
     }

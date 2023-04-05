@@ -26,6 +26,7 @@ resources:
                 - PUT
                 - GET
                 - DELETE
+                - POST
               AllowedOrigins:
                 - '*'
     BucketPolicy:
