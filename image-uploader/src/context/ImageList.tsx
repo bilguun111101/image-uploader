@@ -5,15 +5,14 @@ const ImageListContext = createContext<any>(null);
 
 interface valueType {
     setApproach: (el: boolean) => void;
-    setApproachUrl: (el: string) => void;
+    // setApproachUrl: (el: string) => void;
 }
 
 export const ImageListProvider: FC<PropsWithChildren> = ({ children }) => {
-    const [approachUrl, setApproachUrl] = useState<string>("");
     const [approach, setApproach] = useState<boolean>(false);
+    const [imageList, setImageList] = useState<string[] | undefined>();
     const value: valueType = {
-        setApproach,
-        setApproachUrl
+        setApproach
     }
     useEffect(() => {
         if(!approach) return;

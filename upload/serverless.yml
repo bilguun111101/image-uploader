@@ -60,4 +60,7 @@ functions:
       - http: 
           path: handle
           method: get
-          cors: true
+          cors: 
+            origin: "http://localhost:3000"
+            headers:
+              - "*"

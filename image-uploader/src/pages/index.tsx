@@ -1,28 +1,29 @@
-import { Button } from "@/components";
-import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
+import { Button } from "@/components";
+import { useImageList } from "@/context";
+import { useCallback, useEffect, useState } from "react";
 
 const Home = () => {
     const [approachUrl, setApproachUrl] = useState<string | undefined>(undefined);
     const [selectFile, setSelectFile] = useState<File | undefined>(undefined);
     const [windowImage, setWindowImage] = useState("")
+    const { setApproach } = useImageList();
 
     const sendFile = useCallback(async() => {
         if(!selectFile) return;
             const Key = selectFile?.name;
-            const Type = Key?.split('.').at(-1);
+            const formData = new FormData();
+            formData.append('selectedFile', selectFile);
             try {
                 const response = await axios({
                     method: 'POST',
                     url: 'https://jwyaocojv2.execute-api.us-east-1.amazonaws.com/dev/url',
                     data: {
                         Key,
-                        Type
+                        Type: selectFile?.type
                     },
-                    headers: {
-                        "Content-Type": "*",
-                    }
                 })
+                console.log(response?.data.uploadUrl);
                 setApproachUrl(response?.data.uploadUrl);
             } catch (error) { console.log(error) }
     }, [selectFile])
@@ -42,18 +43,15 @@ const Home = () => {
             const formData = new FormData();
             formData.append('selectedFile', selectFile);
             try {
-                const response = await axios({
-                    method: 'PUT',
-                    url: approachUrl,
-                    data: formData,
-                    headers: { "Content-Type": "*" }
-                })
-                if(!response) return;
+                const response = await axios.put(approachUrl, formData, { headers: { ContentType: selectFile.type }});
+                if(!response.data) return;
                 setSelectFile(undefined);
                 setApproachUrl(undefined);
+                setApproach(true);
             } catch (error) { console.log(error) }
         })()
     }, [approachUrl])
+
     return (
         <section className="w-full h-screen p-3">
             <div className="w-full h-full flex relative items-center justify-center">
