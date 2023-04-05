@@ -18,7 +18,7 @@ export const ImageListProvider: FC<PropsWithChildren> = ({ children }) => {
         if(!approach) return;
         (async() => {
             try {
-                const response = await axios.get("https://jwyaocojv2.execute-api.us-east-1.amazonaws.com/dev/handle");
+                const response = await axios.get("https://1ecxbe7mfc.execute-api.us-east-1.amazonaws.com/dev/handle");
                 console.log(response?.data);
                 setApproach(false);
             } catch (error) { console.log(error) }

@@ -10,6 +10,10 @@ some:
   s3:
     bucket: leaf3bbilguunbucket
 
+files:
+  createApproachUrl: handlers/createApproachUrl.handler
+  handleImagesUrl: handlers/handleImagesUrls.handler
+
 # --
 
 resources:
@@ -46,21 +50,38 @@ resources:
               Effect: Allow
               Principal: '*'
 
+# resources:
+#   Resources:
+#     bbdevs:
+#       Type: AWS::S3::Bucket
+#       Properties:
+#         BucketName: ${self:some.s3.bucket}
+#     SampleBucketPolicy:
+#       Type: AWS::S3::BucketPolicy
+#       Properties:
+#         Bucket: !Ref bbdevs
+#         PolicyDocument:
+#           Statement:
+#             - Action:
+#                 - "s3:GetObject"
+#                 - "s3:PutObject"
+#               Effect: Allow
+#               Resource:
+#                 - arn:aws:s3:::${self:some.s3.bucket}/*
+#               Principal: '*'
+
 functions:
   createApproachUrl:
-    handler: handlers/createApproachUrl.handler
+    handler: ${self:files.createApproachUrl}
     events:
       - http:
           path: url
           method: post
           cors: true
   handleUrls:
-    handler: handlers/handleImagesUrls.handler
+    handler: ${self:files.handleImagesUrl}
     events:
       - http: 
           path: handle
           method: get
-          cors: 
-            # origin: "*"
-            # headers:
-            #   - "*"
+          cors: true
