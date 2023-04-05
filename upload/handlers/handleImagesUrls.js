@@ -1,29 +1,38 @@
-const AWS = require("aws-sdk");
-const s3 = new AWS.S3();
-const uploadBucket = 'leafbbilguunawstutorial';
+const uploadBucket = 'leaf3bbilguunbucket';
+const {
+    S3Client, 
+    ListObjectV2Command
+} = require('@aws-sdk/client-s3');
 
 exports.handler = async (event) => {
-    const params = {
+    const s3Client = new S3Client({});
+    const params = new ListObjectV2Command({
         Bucket: uploadBucket
-    };
-    await s3.listObjectsV2(params, (err, data) => {
-        if (err) {
-            return {
-                statusCode: 402,
-                headers: {
-                    "Access-Control-Allow-Headers": "*",
-                    "Access-Control-Allow-Origin": "*",
-                },
-                body: JSON.stringify({ err })
-            }
-        }
+    })
+    const {
+        Name,
+        Contents
+    } = await s3Client.send(params);
+    try {
+        const list = { Name, Contents };
         return {
             statusCode: 200,
             headers: {
-                "Access-Control-Allow-Headers": "*",
-                "Access-Control-Allow-Origin": "*",
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*',
             },
-            body: JSON.stringify({ data })
+            body: JSON.stringify({ list })
         }
-    }).promise();
+    } catch (error) {
+        return {
+            statusCode: 403,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Headers': '*',
+            },
+            body: JSON.stringify({
+                error
+            })
+        }
+    }
 }

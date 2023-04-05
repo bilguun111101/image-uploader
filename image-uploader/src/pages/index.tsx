@@ -17,7 +17,7 @@ const Home = () => {
             try {
                 const response = await axios({
                     method: 'POST',
-                    url: 'https://jwyaocojv2.execute-api.us-east-1.amazonaws.com/dev/url',
+                    url: 'https://1ecxbe7mfc.execute-api.us-east-1.amazonaws.com/dev/url',
                     data: {
                         Key,
                         Type: selectFile?.type
@@ -40,16 +40,12 @@ const Home = () => {
     useEffect(() => {
         if(!approachUrl || !selectFile) return;
         (async() => {
-            const formData = new FormData();
-            formData.append('image', selectFile);
-            console.log(approachUrl)
             try {
-                // const response = await axios.put(approachUrl, formData, { headers: { ContentType: selectFile.type }});
-                const response = await axios.put(approachUrl, formData.get('image'), {
-                    headers: {
-                        'Content-Type': selectFile.type
-                    }
+                const response = await fetch(approachUrl, {
+                    method: 'PUT',
+                    body: selectFile
                 })
+                console.log(response);
                 setSelectFile(undefined);
                 setApproachUrl(undefined);
                 setApproach(true);

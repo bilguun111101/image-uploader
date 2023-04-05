@@ -2,8 +2,8 @@ const AWS = require('aws-sdk');
 const axios = require('axios');
 
 const s3 = new AWS.S3();
-const uploadBucket = 'leafbbilguunawstutorial';
-const URL_EXPIRATION_SECONDS = 3000;
+const uploadBucket = 'leaf3bbilguunbucket';
+const Expires = 3000;
 
 exports.handler = async(event) => {
   const {
@@ -12,16 +12,15 @@ exports.handler = async(event) => {
   } = JSON.parse(event.body);
 
   const params = {
-    Bucket: uploadBucket,
     Key,
-    Expires: URL_EXPIRATION_SECONDS,
-    ContentType
+    Expires,
+    ContentType,
+    Bucket: uploadBucket,
   }
 
 
   return new Promise((reslove, reject) => {
     const uploadUrl = s3.getSignedUrl('putObject', params);
-    console.log(uploadUrl);
     const response = {
       statusCode: 200,
       headers: {
