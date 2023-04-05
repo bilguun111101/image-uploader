@@ -3,8 +3,8 @@ import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 
 const Home = () => {
-    const [selectFile, setSelectFile] = useState<File | undefined>(undefined);
     const [approachUrl, setApproachUrl] = useState<string | undefined>(undefined);
+    const [selectFile, setSelectFile] = useState<File | undefined>(undefined);
     const [windowImage, setWindowImage] = useState("")
 
     const sendFile = useCallback(async() => {
@@ -35,6 +35,7 @@ const Home = () => {
         setWindowImage(URL.createObjectURL(file));
         setSelectFile(file);
     }
+
     useEffect(() => {
         if(!approachUrl || !selectFile) return;
         (async() => {

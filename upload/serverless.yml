@@ -54,3 +54,10 @@ functions:
           path: url
           method: post
           cors: true
+  handleUrls:
+    handler: handlers/handleImagesUrls.handler
+    events:
+      - http: 
+          path: handle
+          method: get
+          cors: true
