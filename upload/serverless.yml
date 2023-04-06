@@ -4,6 +4,16 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs18.x
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Resource: "*"
+          Action:
+            - 's3:*'
+            - rekognition:DetectText
+            - lambda:InvokeFunction
+            - lambda:InvokeAsync
 
 # some variables
 some:
@@ -13,6 +23,8 @@ some:
 files:
   createApproachUrl: handlers/createApproachUrl.handler
   handleImagesUrl: handlers/handleImagesUrls.handler
+  lastImage: handlers/lastImage.handler
+  send: handlers/send.handler
 
 # --
 
@@ -85,3 +97,7 @@ functions:
           path: handle
           method: get
           cors: true
+  lastImage:
+    handler: ${self:files.lastImage}
+  send: 
+    handler: ${self:files.send}
