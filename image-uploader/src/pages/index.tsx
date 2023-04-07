@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 const Home = () => {
     const [approachUrl, setApproachUrl] = useState<string | undefined>(undefined);
     const [selectFile, setSelectFile] = useState<File | undefined>(undefined);
-    const [windowImage, setWindowImage] = useState("")
+    const [windowImage, setWindowImage] = useState("");
     const { setApproach } = useImageList();
 
     const sendFile = useCallback(async() => {
@@ -41,13 +41,13 @@ const Home = () => {
         if(!approachUrl || !selectFile) return;
         (async() => {
             try {
-                const response = await fetch(approachUrl, {
+                await fetch(approachUrl, {
                     method: 'PUT',
                     body: selectFile
                 })
-                console.log(response);
                 setSelectFile(undefined);
                 setApproachUrl(undefined);
+                setWindowImage("");
                 setApproach(true);
             } catch (error) { console.log(error) }
         })()

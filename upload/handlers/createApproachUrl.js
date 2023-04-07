@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const axios = require('axios');
+const lambda = new AWS.Lambda();
 
 const s3 = new AWS.S3();
 const uploadBucket = 'leaf3bbilguunbucket';
@@ -19,7 +19,7 @@ exports.handler = async(event) => {
   }
 
 
-  return new Promise((reslove, reject) => {
+  return await new Promise((reslove, reject) => {
     const uploadUrl = s3.getSignedUrl('putObject', params);
     const response = {
       statusCode: 200,
