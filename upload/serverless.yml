@@ -14,6 +14,10 @@ provider:
             - rekognition:DetectText
             - lambda:InvokeFunction
             - lambda:InvokeAsync
+        - Effect: "Allow"
+          Action:
+            - 'dynamodb:*'
+          Resource: '*'
 
 # some variables
 some:
@@ -99,5 +103,10 @@ functions:
           cors: true
   lastImage:
     handler: ${self:files.lastImage}
-  send: 
-    handler: ${self:files.send}
+    events:
+      - s3:
+          bucket: ${self:some.s3.bucket}
+          event: s3:ObjectCreated:*
+          existing: true
+  # send: 
+  #   handler: ${self:files.send}
